@@ -3,33 +3,53 @@ import streamlit as st
 from core.project_manager import ProjectManager
 
 
+# Initialize manager
 manager = ProjectManager()
 
+
+# -----------------------------
+# Page Header
+# -----------------------------
 
 st.title("📁 Project Workspace")
 
 st.markdown(
-    "Create and manage your AI projects."
+    """
+    Create and manage your AI projects.
+    Every project contains its own datasets,
+    experiments, and trained models.
+    """
 )
 
 
-with st.expander("➕ Create New Project"):
+# -----------------------------
+# Create New Project
+# -----------------------------
 
-    name = st.text_input(
+with st.expander(
+    "➕ Create New Project",
+    expanded=False
+):
+
+    project_name = st.text_input(
         "Project Name"
     )
 
-    description = st.text_area(
+    project_description = st.text_area(
         "Project Description"
     )
 
-    if st.button("Create Project"):
 
-        if name.strip():
+    if st.button(
+        "Create Project",
+        type="primary"
+    ):
+
+        if project_name.strip():
 
             manager.create_project(
-                name,
-                description
+                project_name,
+                project_description
             )
 
             st.success(
@@ -39,6 +59,7 @@ with st.expander("➕ Create New Project"):
             st.rerun()
 
         else:
+
             st.error(
                 "Project name cannot be empty."
             )
@@ -47,14 +68,19 @@ with st.expander("➕ Create New Project"):
 st.divider()
 
 
+# -----------------------------
+# Display Existing Projects
+# -----------------------------
+
 projects = manager.list_projects()
 
 
 if not projects:
 
     st.info(
-        "No projects created yet."
+        "No projects available. Create your first AI project!"
     )
+
 
 else:
 
@@ -62,39 +88,47 @@ else:
         "Your Projects"
     )
 
+
     for project in projects:
 
-        with st.container(border=True):
+        with st.container(
+            border=True
+        ):
 
             col1, col2 = st.columns(
                 [5, 1]
             )
 
+
+            # Project Details
             with col1:
 
                 st.markdown(
                     f"""
 ### {project['name']}
 
-**ID:** {project['id']}
+**Project ID:** `{project['id']}`
 
+**Description:**  
 {project['description']}
 
-Created: {project['created_at']}
+**Created:** {project['created_at']}
 
-Dataset Classes: {project['dataset_classes']}
+**Dataset**
+- Classes: {project['dataset']['classes']}
+- Images: {project['dataset']['images']}
 
-Images: {project['total_images']}
-
-Status: {project['status']}
-"""
+**Models:** {len(project['models'])}
+                    """
                 )
 
+
+            # Actions
             with col2:
 
                 if st.button(
-                    "🗑️ Delete",
-                    key=project["id"]
+                    "🗑 Delete",
+                    key=f"delete_{project['id']}"
                 ):
 
                     manager.delete_project(
@@ -102,7 +136,7 @@ Status: {project['status']}
                     )
 
                     st.success(
-                        "Deleted!"
+                        "Project deleted successfully."
                     )
 
                     st.rerun()
