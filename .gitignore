@@ -1,0 +1,31 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+venv/
+env/
+.venv/
+
+# Conda
+conda/
+*.conda
+
+# Streamlit
+.streamlit/
+
+# AI outputs
+storage/models/
+storage/experiments/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Competitive Programming Helper
+.cph/
