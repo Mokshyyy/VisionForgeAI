@@ -29,3 +29,6 @@ Thumbs.db
 
 # Competitive Programming Helper
 .cph/
+
+# VisionForge generated data
+storage/

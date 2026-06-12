@@ -6,6 +6,10 @@ from core.project_manager import ProjectManager
 # Initialize manager
 manager = ProjectManager()
 
+# Initialize active project state
+if "active_project" not in st.session_state:
+    st.session_state.active_project = None
+
 
 # -----------------------------
 # Page Header
@@ -20,6 +24,20 @@ st.markdown(
     experiments, and trained models.
     """
 )
+
+if st.session_state.active_project:
+
+    active = st.session_state.active_project
+
+    st.success(
+        f"🟢 Active Project: {active['name']} "
+        f"(ID: {active['id']})"
+    )
+
+    if st.button("Close Current Project"):
+
+        st.session_state.active_project = None
+        st.rerun()
 
 
 # -----------------------------
@@ -95,9 +113,7 @@ else:
             border=True
         ):
 
-            col1, col2 = st.columns(
-                [5, 1]
-            )
+            col1, col2, col3 = st.columns([5, 1, 1])
 
 
             # Project Details
@@ -121,15 +137,40 @@ else:
 **Models:** {len(project['models'])}
                     """
                 )
-
-
             # Actions
+
             with col2:
+
+                if st.button(
+                    "📂 Open",
+                    key=f"open_{project['id']}"
+                ):
+
+                    st.session_state.active_project = {
+                        "id": project["id"],
+                        "name": project["name"]
+                    }
+
+                    st.success(
+                        f"Opened {project['name']}"
+                    )
+
+                    st.rerun()
+
+
+            
+            with col3:
 
                 if st.button(
                     "🗑 Delete",
                     key=f"delete_{project['id']}"
                 ):
+                    if (
+                        st.session_state.active_project
+                        and
+                        st.session_state.active_project["id"] == project["id"]
+                    ):
+                        st.session_state.active_project = None
 
                     manager.delete_project(
                         project["id"]
