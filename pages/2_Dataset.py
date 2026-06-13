@@ -1,5 +1,5 @@
 import streamlit as st
-
+import time
 from core.dataset_manager import DatasetManager
 
 
@@ -62,7 +62,8 @@ if st.button(
             st.success(
                 f"Class '{class_name}' created."
             )
-
+            
+            time.sleep(1.5)
             st.rerun()
 
 
@@ -161,4 +162,90 @@ else:
                     f"Deleted class '{class_name}'."
                 )
 
+                time.sleep(1.5)
                 st.rerun()
+
+
+# =============================
+# Upload Images
+# =============================
+
+st.divider()
+
+st.subheader("📤 Upload Images")
+
+
+classes = manager.get_classes(
+    project["id"]
+)
+
+
+if not classes:
+
+    st.info(
+        "Create a class before uploading images."
+    )
+
+
+else:
+
+    selected_class = st.selectbox(
+        "Select Class",
+        classes
+    )
+
+
+    uploaded_files = st.file_uploader(
+        "Choose images",
+        type=[
+            "jpg",
+            "jpeg",
+            "png"
+        ],
+        accept_multiple_files=True
+    )
+
+
+    if st.button(
+        "Upload Images",
+        type="primary"
+    ):
+
+        if uploaded_files:
+
+            success, failed = (
+                manager.upload_images(
+                    project["id"],
+                    selected_class,
+                    uploaded_files
+                )
+            )
+
+
+            st.success(
+                f"{success} images uploaded successfully."
+            )
+
+
+            if failed:
+
+                st.warning(
+                    "Some files were skipped:"
+                )
+
+                for file in failed:
+
+                    st.write(
+                        f"• {file}"
+                    )
+
+            time.sleep(1.5)
+
+            st.rerun()
+
+
+        else:
+
+            st.error(
+                "Please select at least one image."
+            )
