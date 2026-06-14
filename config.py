@@ -36,3 +36,29 @@ AVAILABLE_MODELS = {
     "MobileNetV3": "mobilenet_v3_small",
     "EfficientNet-B0": "efficientnet_b0"
 }
+
+# Create storage directories automatically
+
+STORAGE_DIR.mkdir(
+    exist_ok=True
+)
+
+PROJECTS_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+DATASETS_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+MODELS_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+EXPERIMENTS_DIR.mkdir(
+    parents=True,
+    exist_ok=True
+)

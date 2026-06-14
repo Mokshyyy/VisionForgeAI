@@ -36,3 +36,6 @@ storage/
 # Python cache
 __pycache__/
 *.pyc
+
+# Development testing
+test_training.py
